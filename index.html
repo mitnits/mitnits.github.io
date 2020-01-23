@@ -6,7 +6,8 @@
         <link rel="stylesheet" href="demo.css" type="text/css" media="screen">
         <link rel="stylesheet" href="demo-print.css" type="text/css" media="print">
         <script src="raphael-min.js"></script>
-        <script src="brython.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/brython@3.8.6/brython.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/brython@3.8.6/brython_stdlib.js"></script>
         <style media="screen">
             body {
                 margin: 0;
@@ -37,7 +38,7 @@
         <script type="text/python3">
         from browser import document, window
         from javascript import JSObject
-
+        import sys
         paper = window.Raphael("canvas", 640, 480)
         btn = document["run"]
         cd = document["code"]
@@ -80,6 +81,7 @@
             circle(-i, 0, 0.1).attr({'stroke':'#FF0000'})
           paper.text(630, 248, "X").attr({'fill': '#0000FF'})
           paper.text(325, 10, "Y").attr({'fill': '#0000FF'})
+          sys.stderr = document
           exec(cd.value)
 
         btn.bind('click', callback)
