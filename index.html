@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Raphaël · Playground</title>
+        <link rel="stylesheet" href="demo.css" type="text/css" media="screen">
+        <link rel="stylesheet" href="demo-print.css" type="text/css" media="print">
+        <script src="raphael-min.js"></script>
+        <script src="http://brython.paehler.at/src/brython.js"></script>
+        <style media="screen">
+            body {
+                margin: 0;
+                padding: 0;
+                text-align: center;
+            }
+            h1 {
+                font-weight: 400;
+                height: 5%;
+            }
+            #canvas {
+                height: 480px;
+                margin: 0 auto;
+                text-align: left;
+                width: 640px;
+            }
+            #code {
+                font-family: Consolas, Monaco, "Lucida Console", monospace;
+                height: 14em;
+                margin: 10px;
+                padding: 0;
+                width: 90%;
+            }
+            #run {
+                font-size: 2em;
+            }
+        </style>
+        <script type="text/python3">
+        from browser import document, window
+        from javascript import JSObject
+
+        paper = window.Raphael("canvas", 640, 480)
+        btn = document["run"]
+        cd = document["code"]
+
+        def circle(x, y, r):
+          return paper.circle(320+int(x*10), 240-int(y*10), int(r*10))
+
+        def point(x, y):
+          return paper.circle(320+int(x*10), 240-int(y*10), 2)
+
+        def line(x1, y1, x2, y2):
+          return paper.path("M%d,%d L%d,%d" % (320+int(x1*10), 240-int(y1*10), 320+int(x2*10), 240-(y2*10)))
+
+        def real_range(start, stop, step):
+          rn = []
+          r = start
+          while r < stop:
+            rn.append(r)
+            r += step
+          return rn
+
+        def callback(ev):
+          paper.clear()
+          r = paper.rect(0, 0, 640, 480, 10)
+          r.attr({'fill': "#fff", 'stroke':"none"})
+
+          for i in range(0, 48):
+            paper.rect(0, i*10, 640, (i+1)*10).attr({'stroke': '#F0F0F0'})
+          for i in range(0, 64):
+            paper.rect(i*10, 0, (i+1)*10, 480).attr({'stroke': '#F0F0F0'})
+
+          paper.path("M%d,%d L%d,%d" % (0, 240, 640, 240))
+          paper.path("M%d,%d L%d,%d" % (320, 0, 320, 640))
+
+          for i in range(0, 24):
+            circle(0, i, 0.1).attr({'stroke': '#FF0000'})
+            circle(0, -i, 0.1).attr({'stroke':'#FF0000'})
+          for i in range(0, 32):
+            circle(i, 0, 0.1).attr({'stroke': '#FF0000'})
+            circle(-i, 0, 0.1).attr({'stroke':'#FF0000'})
+          paper.text(630, 248, "X").attr({'fill': '#0000FF'})
+          paper.text(325, 10, "Y").attr({'fill': '#0000FF'})
+          exec(cd.value)
+
+        btn.bind('click', callback)
+        callback(None)
+        </script>
+    </head>
+    <body onload="brython(1)">
+        <h2>Example 1: line(0, 0, 10, 10)</h2>
+        <h2>Example 2: circle(0, 0, 7)</h2>
+        <h2>Example 3: point(6, 6)</h2>
+        <div id="canvas"></div>
+        <div><textarea cols=80 rows="10" id="code">
+
+
+        </textarea></div>
+        <div><button id="run" type="button">Run</button></div>
+        <p id="copy">Demo of <a href="http://raphaeljs.com/">Raphael</a>—JavaScript Vector Library
+        <br>adapted to <a href="http://brython.info">Brython</a></p>
+
+    </body>
+</html>
